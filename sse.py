@@ -10,23 +10,25 @@ import pickle
 from itertools import product
 import scipy.linalg as la
 import warnings
+import pickle
 
 
 class SecureStateEsitmation:
-    def __init__(self, n, p, trial):
-        self.tol = 1e-5
+    def __init__(self, n, p, system, r, noise, percent, selection):
         # performance of tolorance, with larger tol, it is susceptible to errors,
         # treating attacked as attacked-free and attacked-free as attacked.
-        with open('data/noise_sse_test_from_mat_n{0}_p{1}_{2}.mat'.format(n, p, trial), 'rb') as filehandle:
+        with open('data/{5}_sse_test_from_mat_n{0}_p{1}_{2}_{3}_{4}_{6}{7}.mat'.format(n, p, system, r, 'random', noise, percent, selection),
+                              'rb+') as filehandle:
             self.Y = pickle.load(filehandle)
             self.obsMatrix = pickle.load(filehandle)
             self.p, self.n, self.tau = pickle.load(filehandle)
             self.K = pickle.load(filehandle)
             self.x0 = pickle.load(filehandle)
             self.E = pickle.load(filehandle)
-            self.noise_bound = pickle.load(filehandle)  * 1.5
+            self.noise_bound = pickle.load(filehandle)
             self.A = pickle.load(filehandle)
             self.C = pickle.load(filehandle)
+            self.tol = pickle.load(filehandle)
 
     def obs(self):
         # whether the system is observable
@@ -86,13 +88,13 @@ class Node:
         return hash((self.attack, self.level))
 
 
-def main(n, p, trial):
+def main(n, p, system, r, noise, percent, selection):
 
     warnings.filterwarnings(action="ignore", module="scipy", message="^internal gelsd")
 
     level = []
     # Request the init and goal state
-    sse = SecureStateEsitmation(n, p, trial)
+    sse = SecureStateEsitmation(n, p, system, r, noise, percent, selection)
 
     # Initializing root node
     root = Node(acr=True, noa=0, level=1, attack=0, ioo=[], par=None)
@@ -104,9 +106,10 @@ def main(n, p, trial):
     frontier.put(root)
     # Initializing explored set
     exploredSet = set()  # set
-
+    # iteration
+    itera = 0
     while True:
-
+        itera = itera + 1
         # EMPTY?(frontier) and EMPTY?(discard), then return failure
         if frontier.empty() and discard.empty():
             break
@@ -119,7 +122,7 @@ def main(n, p, trial):
 
         # chooses the lowest-cost node in frontier
         node = frontier.get()
-        # print(node.level * -1 + 1, node.attack, [ i * -1 + 1 for i in node.indexOfZero])
+        # print(node.level * -1 + 1, node.attack, [i * -1 + 1 for i in node.indexOfZero])
         level.append(node.level * -1 + 1)
 
         # stop condition: when there is no state cost in the frontier
@@ -132,7 +135,7 @@ def main(n, p, trial):
             x, res, _, _ = la.lstsq(O, Y)
             # print("error: ", np.linalg.norm(x - sse.x0)/np.linalg.norm(sse.x0))
             attackfree = [-1 * i + 1 for i in node.indexOfZero]
-            attack = [i for i in range(1, sse.p + 1) if i not in attackfree]
+            attack = [i-1 for i in range(1, sse.p + 1) if i not in attackfree]
 
             # sse_from_mat i otherwise i+1
             print("true attack ({0})        : ".format(len(sse.K)), sorted([i for i in sse.K]))
@@ -148,7 +151,7 @@ def main(n, p, trial):
             # print("true attack ({0})        : ".format(len(sse.K)), sorted([i+1 for i in sse.K]))
             # print("estimate attack ({0})    : ".format(len(attack)), attack)
             # --------------------------------------------------
-            return np.linalg.norm(x - sse.x0)/np.linalg.norm(sse.x0), time
+            return np.linalg.norm(x - sse.x0)/np.linalg.norm(sse.x0), time, itera
 
         exploredSet.add(node)
 
@@ -164,19 +167,24 @@ def main(n, p, trial):
                 if (-1 * childNode.level + 1) - len(childNode.indexOfZero) > sse.p // 2 - 1: # we only discard bad nodes
                     continue
 
-                if childNode in exploredSet:
+                # if childNode in exploredSet:
+                #     discard.put(childNode)
+                #     continue
+                # # only consider 0 residual
+                #
+                # # option 2
+                # q = frontier.queue
+                # if childNode not in q:
+                #     # print("childnode accepted: ", [i * -1 + 1 for i in childNode.indexOfZero], childNode.level * -1 + 1)
+                #     frontier.put(childNode)
+                # else:
+                #     discard.put(childNode)
+
+                if childNode in exploredSet or childNode in frontier.queue:
                     discard.put(childNode)
                     continue
-                # only consider 0 residual
-
-                # option 2
-                q = frontier.queue
-                if childNode not in q:
-                    # print("childnode accepted: ", [i * -1 + 1 for i in childNode.indexOfZero], childNode.level * -1 + 1)
-                    frontier.put(childNode)
                 else:
-                    discard.put(childNode)
-
+                    frontier.put(childNode)
     return False, False
 
 
@@ -205,35 +213,31 @@ if __name__ == "__main__":
 
     # ------------- multiple time runtime --------------
     # ===================== large scale test ================================
-    from generate_test_case import TestCase
-    for n in 20 * np.array(range(10, 11)):
-        time = []
-        error = []
-        for trial in range(1, 11):
-            # testCase = TestCase()
-            # with open('sse_test', 'wb') as filehandle:
-            #     pickle.dump(testCase.Y, filehandle)
-            #     pickle.dump(testCase.obsMatrix, filehandle)
-            #     pickle.dump([testCase.p, testCase.n, testCase.tau], filehandle)
-            #     pickle.dump(testCase.K, filehandle)
-            #     pickle.dump(testCase.x0, filehandle)
-            #     pickle.dump(testCase.E, filehandle)
-            #     pickle.dump(testCase.noise_bound, filehandle)
-            #     pickle.dump(testCase.A, filehandle)
-            #     pickle.dump(testCase.C, filehandle)
-            #     pickle.dump(testCase.s, filehandle)
-            start = datetime.datetime.now()
-            e, t = main(n, n, trial)
+    # from generate_test_case import TestCase
+    for noise in ['noiseless', 'noisy']:
+        for selection in ['worst', 'random']:
+            for p in 20 * np.array(range(1, 2)):
+                for percent in [1, 2, 3]:
+                    time = []
+                    error = []
+                    itera = []
+                    for system in range(1, 11):
+                        for r in range(1, 11):
+                            start = datetime.datetime.now()
+                            # e, t, i = main(50, p, trial)
+                            e, t, i = main(p, p, system, r, noise, percent, selection)
+                            if not t:
+                                print('=== Something goes wrong.. maybe noise too large or attack too weak ==')
+                                continue
+                            time.append(t)
+                            error.append(e)
+                            itera.append(i)
+                            print(e, t, i)
 
-            if not t:
-                print('=========== Something goes wrong.. maybe noise too large or attack too weak ==============')
-                continue
-            time.append(t)
-            error.append(e)
-            print(e)
-
-        print('n: {0}, error: {1}, time: {2}'.format(n, np.mean(error), np.mean(time)))
-
+                    with open('result/{0}_{1}_{2}_{3}.mat'.format(noise, selection, p, percent), 'wb+') as filehandle:
+                        pickle.dump(time, filehandle)
+                        pickle.dump(error, filehandle)
+                        pickle.dump(itera, filehandle)
     # ----------------- date from matlab ---------------
     # from data_from_mat import TestCase
     # testCase = TestCase()

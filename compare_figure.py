@@ -11,7 +11,7 @@ import numpy as np
 plt.rcParams['mathtext.fontset'] = 'stix'
 plt.rcParams['font.family'] = 'STIXGeneral'
 plt.rc('text', usetex=True)
-plt.rcParams.update({'font.size': 13, 'legend.fontsize': 10})
+plt.rcParams.update({'font.size': 14, 'legend.fontsize': 12})
 
 # --------------------------------------- level vs iteration --------------------------------------
 # with open('over2', 'rb') as filehandle:
@@ -255,44 +255,242 @@ plt.rcParams.update({'font.size': 13, 'legend.fontsize': 10})
 
 # -------------------------------------- large scale test with noise --------------------------------
 
-smt = np.array([0.0336, 0.1180, 1.2643, 7.4214, 26.1639, 82.4168, 225.0039, 392.6660, 823.0514, 1657.7933])
-search = np.array(
-    [0.0171, 0.1080, 0.4340, 1.4479, 3.0497, 7.4229, 12.4825, 21.8938, 30.6599, 46.6422])
-miqp = np.array(
-    [0.0928741000000000, 0.758067000000000, 2.50337980000000, 4.50206960000000, 10.4537685000000, 27.6672864000000,
-     38.7556208000000, 62.2377413000000, 72.3947862, 100.5562294])
+# smt = np.array([0.0336, 0.1180, 1.2643, 7.4214, 26.1639, 82.4168, 225.0039, 392.6660, 823.0514, 1657.7933])
+# search = np.array(
+#     [0.0171, 0.1080, 0.4340, 1.4479, 3.0497, 7.4229, 12.4825, 21.8938, 30.6599, 46.6422])
+# miqp = np.array(
+#     [0.0928741000000000, 0.758067000000000, 2.50337980000000, 4.50206960000000, 10.4537685000000, 27.6672864000000,
+#      38.7556208000000, 62.2377413000000, 72.3947862, 100.5562294])
+#
+# p = 20 * np.array(range(1, 11))
+#
+# smt_error = np.array(
+#     [0.0433, 0.0797, 0.1256, 0.1590, 0.1656, 0.2986, 0.2041, 0.3702, 0.2570, 0.3228])
+# search_error = np.array([0.0433, 0.0797, 0.1256, 0.1590, 0.1657, 0.2986, 0.2041, 0.3702, 0.2570, 0.3228])
+#
+# miqp_error = np.array(
+#     [0.0433464897719787, 0.119925152389902, 0.214262485811072, 1, 1, 0.446953970444272,
+#      1, 0.478595482310494, 0.5727111165335478, 1])
+#
+# fig, ax = plt.subplots(2, 1)
+# l2 = ax[0].plot(p, smt, 'r--o')
+# l3 = ax[0].plot(p, miqp, 'g--s')
+# l1 = ax[0].plot(p, search, 'b--d')
+#
+# ax[0].legend([r'IMHOTEP-SMT', r'MIQCP', r'Alg.1'])
+# ax[0].set_xlabel(r'Number of states and sensors', usetex=True)
+# ax[0].set_ylabel(r'Execution time (sec)', usetex=True)
+#
+# ax[0].set_xticks(p)
+# ax[1].set_xticks(p)
+#
+# ax[1].plot(p, smt_error, 'r--o')
+# ax[1].plot(p, miqp_error, 'g--s')
+# ax[1].plot(p, search_error, 'b--d')
+#
+# ax[1].set_xlabel(r'Number of states and sensors', usetex=True)
+# ax[1].set_ylabel(r'$\|x^* - x_0\|_2 / \|x_0\|_2$', usetex=True)
+#
+# # fig.legend((l1, l2), ('Alg.1', 'IMHOTEP-SMT'), 'lower center')
+# fig.tight_layout()
+#
+# plt.savefig('/Users/chrislaw/Box Sync/Research/SSE/figure/large_scale_noise.pdf', bbox_inches='tight', dpi=600)
+# plt.show()
 
-p = 20 * np.array(range(1, 11))
 
-smt_error = np.array(
-    [0.0433, 0.0797, 0.1256, 0.1590, 0.1656, 0.2986, 0.2041, 0.3702, 0.2570, 0.3228])
-search_error = np.array([0.0433, 0.0797, 0.1256, 0.1590, 0.1657, 0.2986, 0.2041, 0.3702, 0.2570, 0.3228])
+# ------------------------------------supplemental complexity test vs # sensors --------------------------------------
+# search_50_p = np.array([32.4000,64.4000,96.7000,131.9000,164.9000,199.6000,231.2000,263.0000,297.4000,333.5000])
+# search_100_p = np.array(
+#     [32.7000,64.3000,97.7000,132.0000,165.7000,197.7000,234.0000,265.5000,298.1000,330.4000])
+# search_200_p = np.array(
+#     [31.3000,62.4000,99.9000,130.9000,164.6000,196.8000,230.2000,264.8000,298.8000,332.5000])
+#
+# p = 20 * np.array(range(1, 11))
+#
+# fig, ax = plt.subplots(2, 1)
+# l2 = ax[0].plot(p, search_50_p, 'r--o')
+# l3 = ax[0].plot(p, search_100_p, 'g--s')
+# l1 = ax[0].plot(p, search_200_p, 'b--d')
+#
+# ax[0].legend([r'n=50', r'n=100', r'n=200'])
+# ax[0].set_xlabel(r'Number of sensors', usetex=True)
+# ax[0].set_ylabel(r'Number of iterations', usetex=True)
+#
+# ax[0].set_xticks(p)
+# ax[0].set_yticks(60 * np.array(range(1, 7)))
+# # fig.tight_layout()
+#
+# # plt.savefig('/Users/chrislaw/Box Sync/Research/SSE/figure/complexity_test_p.pdf', bbox_inches='tight', dpi=600)
+# # plt.show()
+# # ------------------------------------supplemental complexity test vs # sensors --------------------------------------
+# search_50_n = np.array([82.9000,81.3000,81.7000,82.8000,81.7000,80.7000,83.2000,82.4000,80.7000,80.4000])
+# search_100_n = np.array(
+#     [166.3000,165.2000,165.3000,165.3000,164.6000,163.4000,164.9000,165.8000,165.0000,165.2000])
+# search_200_n = np.array(
+#     [332.1000,332.6000,334.2000,330.7000,332.5000,332.2000,333.4000,332.1000,330.8000,331.1000])
+#
+# n = 20 * np.array(range(1, 11))
+#
+# l2 = ax[1].plot(n, search_50_n, 'r--o')
+# l3 = ax[1].plot(n, search_100_n, 'g--s')
+# l1 = ax[1].plot(n, search_200_n, 'b--d')
+#
+# ax[1].legend([r'p=50', r'p=100', r'p=200'])
+# ax[1].set_xlabel(r'Number of states', usetex=True)
+# ax[1].set_ylabel(r'Number of iterations', usetex=True)
+#
+# ax[1].set_xticks(n)
+# ax[1].set_yticks(80 * np.array(range(1, 6)))
+# fig.tight_layout()
+#
+# plt.savefig('/Users/chrislaw/Box Sync/Research/SSE/figure/complexity_test.pdf', bbox_inches='tight', dpi=600)
+# plt.show()
 
-miqp_error = np.array(
-    [0.0433464897719787, 0.119925152389902, 0.214262485811072, 1, 1, 0.446953970444272,
-     1, 0.478595482310494, 0.5727111165335478, 1])
+import matplotlib.pyplot as plt
+import numpy as np
 
-fig, ax = plt.subplots(2, 1)
-l2 = ax[0].plot(p, smt, 'r--o')
-l3 = ax[0].plot(p, miqp, 'g--s')
-l1 = ax[0].plot(p, search, 'b--d')
+# construct some data like what you have:
+# fig, ax = plt.subplots(2, 1)
+# means = np.array([14.25, 15.25, 17.0, 14.25, 15.25, 17.0])
+# std = np.array([1.51, 1.70, 3.10, 1.51, 1.70, 3.10])
+# mins = np.array([13, 12, 13, 13, 12, 13])
+# maxes = np.array([17, 18, 27, 17, 18, 27])
+# worst = np.array([26, 19, 29, 26, 19, 29])
+#
+# # create stacked errorbars:
+# ax[0].errorbar(np.array([2,3,4]), means[range(3)], std[range(3)], fmt='.c', ecolor='c', lw=15, label='constant attack')
+# ax[0].errorbar(np.array([5,6,7]), means[range(3, 6)], std[range(3, 6)], fmt='.g', ecolor='g', lw=15, label='random attack')
+#
+# ax[0].errorbar(np.array([2,3,4]), means[range(3)], [means[range(3)] - mins[range(3)],
+#                                                      maxes[range(3)] - means[range(3)]],
+#              fmt='.k', markersize=8, ecolor='k', lw=1, capsize=5, capthick=1)
+# ax[0].errorbar(np.array([5,6,7]), means[range(3, 6)], [means[range(3, 6)] - mins[range(3, 6)],
+#                                                      maxes[range(3, 6)] - means[range(3, 6)]],
+#              fmt='.k', markersize=8, ecolor='k', lw=1, capsize=5, capthick=1)
+# # plt.plot(np.arange(8), means+3, '*k')
+# # plt.xlim(-1, 8)
+# ax[0].plot([2,3,4,5,6,7], worst, '*r', markersize=10, label='appear first')
+# ax[0].legend(ncol=3, loc='upper center', bbox_to_anchor=(0.5, 1.3))
+#
+# ax[0].set_yticks([15, 20, 25, 30])
+# ax[0].set_xticks(np.array([2, 3, 4, 5, 6, 7]))
+# ax[0].set_xticklabels([2, 3, 4, 2, 3, 4])
+# ax[0].set_ylabel('iterations')
+# ax[0].set_title('(a) Noiseless secure state estimation', y=-0.35)
+# # fig.tight_layout()
+#
+# means = np.array([14.85, 17.15, 18.25, 14.85, 17.25, 18.25])
+# std = np.array([2.03, 3.62, 4.84, 2.03, 3.81, 4.84])
+# mins = np.array([13, 13, 13, 13, 13, 13])
+# maxes = np.array([19, 29, 29, 19, 29, 29])
+# worst = [22, 22, 29, 22, 22, 29]
+#
+# # create stacked errorbars:
+# ax[1].errorbar(np.array([2,3,4]), means[range(3)], std[range(3)], fmt='.c', ecolor='c', lw=15, label='constant attack')
+# ax[1].errorbar(np.array([5,6,7]), means[range(3, 6)], std[range(3, 6)], fmt='.g', ecolor='g', lw=15, label='random attack')
+#
+# ax[1].errorbar(np.array([2,3,4]), means[range(3)], [means[range(3)] - mins[range(3)],
+#                                                      maxes[range(3)] - means[range(3)]],
+#              fmt='.k', markersize=8, ecolor='k', lw=1, capsize=5, capthick=1)
+# ax[1].errorbar(np.array([5,6,7]), means[range(3, 6)], [means[range(3, 6)] - mins[range(3, 6)],
+#                                                      maxes[range(3, 6)] - means[range(3, 6)]],
+#              fmt='.k', markersize=8, ecolor='k', lw=1, capsize=5, capthick=1)
+# # plt.plot(np.arange(8), means+3, '*k')
+# # plt.xlim(-1, 8)
+# ax[1].plot([2,3,4,5,6,7], worst, '*r', markersize=10, label='appear first')
+# # ax[1].axvline(4.5, which='major', linestyle='-.', color='gray')  # vertical lines
+#
+# ax[1].set_xlabel(r'$\bar{s}$')
+#
+# ax[1].set_yticks([15, 20, 25, 30])
+# ax[1].set_xticks(np.array([2,3,4,5,6,7]))
+# ax[1].set_xticklabels([2,3,4,2,3,4])
+# # ax[1].set_xlabel(r'$\bar{s}$')
+# ax[1].set_ylabel('iterations')
+# ax[1].set_title('(b) Noisy secure state estimation', y=-0.5)
+# plt.show()
 
-ax[0].legend([r'IMHOTEP-SMT', r'MIQCP', r'Alg.1'])
-ax[0].set_xlabel(r'Number of states and sensors', usetex=True)
-ax[0].set_ylabel(r'Execution time (sec)', usetex=True)
 
-ax[0].set_xticks(p)
-ax[1].set_xticks(p)
+# 2, noiseless, worst, 14.22, 5.039007838850819, 11, 26, 1.9728977446515544e-15
+# 3, noiseless, worst, 21.8, 5.979966555090421, 11, 32, 3.2422226449230927e-15
+# 4, noiseless, worst, 28.25, 3.766629793329841, 22, 38, 2.0446764135867933e-15
+# 2, noiseless, random, 13.9075, 2.256976683530426, 11, 26, 2.025872546801118e-15
+# 3, noiseless, random, 15.79, 2.4384216206390557, 11, 32, 2.761354484923665e-15
+# 4, noiseless, random, 17.33, 4.1335335972990475, 13, 38, 2.265020539311472e-15
+# 2, noisy, worst, 13.9175, 4.884740909198768, 11, 26, 0.09276686005919153
+# 3, noisy, worst, 19.7525, 5.128473822688383, 11, 30, 0.09158693799925921
+# 4, noisy, worst, 26.8075, 2.910402678324771, 22, 33, 0.19713239617726985
+# 2, noisy, random, 14.0, 2.303258561256204, 11, 22, 0.09688393937079379
+# 3, noisy, random, 15.7475, 3.3269721594867607, 11, 47, 0.11444131522683518
+# 4, noisy, random, 17.2775, 4.179771973445441, 12, 42, 0.18553701119517657
 
-ax[1].plot(p, smt_error, 'r--o')
-ax[1].plot(p, miqp_error, 'g--s')
-ax[1].plot(p, search_error, 'b--d')
 
-ax[1].set_xlabel(r'Number of states and sensors', usetex=True)
-ax[1].set_ylabel(r'$\|x^* - x_0\|_2 / \|x_0\|_2$', usetex=True)
+import pickle
 
-# fig.legend((l1, l2), ('Alg.1', 'IMHOTEP-SMT'), 'lower center')
-fig.tight_layout()
+with open('result_small', 'rb') as filehandle:
+    result = pickle.load(filehandle)
 
-plt.savefig('/Users/chrislaw/Box Sync/Research/SSE/figure/large_scale_noise.pdf', bbox_inches='tight', dpi=600)
+fig, ax = plt.subplots(1, 2)
+means = result[range(6), 0]
+std = result[range(6), 1]
+mins = result[range(6), 2]
+maxes = result[range(6), 3]
+
+# create stacked errorbars:
+ax[0].errorbar(np.array([2, 3, 4]), means[range(3, 6)], std[range(3, 6)], fmt='.c', ecolor='c', lw=19, label='random attack')
+ax[0].errorbar(np.array([2.3, 3.3, 4.3]), means[range(3)], std[range(3)], fmt='.m', ecolor='m', lw=19, label='greedy attack')
+
+ax[0].errorbar(np.array([2.3, 3.3, 4.3]), means[range(3)], [means[range(3)] - mins[range(3)],
+                                                     maxes[range(3)] - means[range(3)]],
+             fmt='.k', markersize=8, ecolor='k', lw=1, capsize=5, capthick=1)
+ax[0].errorbar(np.array([2, 3, 4]), means[range(3, 6)], [means[range(3, 6)] - mins[range(3, 6)],
+                                                     maxes[range(3, 6)] - means[range(3, 6)]],
+             fmt='.k', markersize=8, ecolor='k', lw=1, capsize=5, capthick=1)
+# plt.plot(np.arange(8), means+3, '*k')
+# ax[0].plot([2,3,4,5,6,7], worst, '*r', markersize=10, label='appear first')
+ax[0].legend(ncol=1, bbox_to_anchor=(0.8, 1.0))
+ax[0].set_xlabel(r'$\bar{s}$')
+
+ax[0].set_yticks([10, 15, 20, 25, 30, 35, 40, 45, 50])
+
+ax[0].set_xticks(np.array([1.8, 2.15, 3.15, 4.15, 4.5]))
+ax[0].set_xticklabels([None, 2, 3,  4])
+ax[0].set_ylabel('Number of iterations')
+ax[0].set_title('(a) Noiseless case', y=-0.25)
+# fig.tight_layout()
+
+means = result[range(6, 12), 0]
+std = result[range(6, 12), 1]
+mins = result[range(6, 12), 2]
+maxes = result[range(6, 12), 3]
+
+# create stacked errorbars:
+ax[1].errorbar(np.array([2, 3, 4]), means[range(3, 6)], std[range(3, 6)], fmt='.c', ecolor='c', lw=19, label='random attack')
+
+ax[1].errorbar(np.array([2.3, 3.3, 4.3]), means[range(3)], std[range(3)], fmt='.m', ecolor='m', lw=19, label='greedy attack')
+
+ax[1].errorbar(np.array([2, 3, 4]), means[range(3, 6)], [means[range(3, 6)] - mins[range(3, 6)],
+                                                     maxes[range(3, 6)] - means[range(3, 6)]],
+             fmt='.k', markersize=8, ecolor='k', lw=1, capsize=5, capthick=1)
+
+ax[1].errorbar(np.array([2.3, 3.3, 4.3]), means[range(3)], [means[range(3)] - mins[range(3)],
+                                                     maxes[range(3)] - means[range(3)]],
+             fmt='.k', markersize=8, ecolor='k', lw=1, capsize=5, capthick=1)
+
+# plt.plot(np.arange(8), means+3, '*k')
+# plt.xlim(-1, 8)
+# ax[1].plot([2,3,4,5,6,7], worst, '*r', markersize=10, label='appear first')
+# ax[1].axvline(4.5, which='major', linestyle='-.', color='gray')  # vertical lines
+
+ax[1].set_xlabel(r'$\bar{s}$')
+ax[1].set_yticks([10, 15, 20, 25, 30, 35, 40, 45, 50])
+
+# ax[1].set_xticks(np.array([2,3,4,5,6,7]))
+# ax[1].set_xticklabels([2,3,4,2,3,4])
+# ax[1].set_xlabel(r'$\bar{s}$')
+ax[1].set_xticks(np.array([1.8, 2.15, 3.15, 4.15, 4.5]))
+ax[1].set_xticklabels([None, 2, 3,  4])
+# ax[1].set_ylabel('iterations')
+ax[1].set_title('(b) Noisy case', y=-0.25)
 plt.show()
+

@@ -15,11 +15,11 @@ class TestCase(object):
 
     def __init__(self, n, p, trial):
         # large scale
-        # data = sio.loadmat('/Users/chrislaw/Box Sync/Research/SSE/Imhotep-smt-master/ImhotepSMT/Examples/'
-        #                    'Random examples/Test2_sensors/test_n{0}_p{1}_{2}.mat'.format(n, p, trial))
-
         data = sio.loadmat('/Users/chrislaw/Box Sync/Research/SSE/Imhotep-smt-master/ImhotepSMT/Examples/'
-                           'Random examples/Test2_sensors/noise_test_n{0}_p{1}_{2}.mat'.format(n, p, trial))
+                           'Random examples/Test2_sensors/test_n{0}_p{1}_{2}.mat'.format(n, p, trial))
+
+        # data = sio.loadmat('/Users/chrislaw/Box Sync/Research/SSE/Imhotep-smt-master/ImhotepSMT/Examples/'
+        #                    'Random examples/Test2_sensors/noise_test_n{0}_p{1}_{2}.mat'.format(n, p, trial))
 
         self.p = data['p'][0][0]
         self.n = data['n'][0][0]
@@ -68,11 +68,11 @@ class TestCase(object):
 # ============================= large scale test without noise =====================================
 
 
-for n in 20 * np.array(range(1, 11)):
-    for trial in range(1, 11):
+for n in 20 * np.array(range(10, 11)):
+    for trial in range(9, 10):
         print(n)
         testCase = TestCase(n, n, trial)
-        with open('data/noise_sse_test_from_mat_n{0}_p{1}_{2}.mat'.format(n, n, trial), 'wb+') as filehandle:
+        with open('data/sse_test_from_mat_n{0}_p{1}_{2}.mat'.format(n, n, trial), 'wb+') as filehandle:
             pickle.dump(testCase.Y, filehandle)
             pickle.dump(testCase.obsMatrix, filehandle)
             pickle.dump([testCase.p, testCase.n, testCase.tau], filehandle)

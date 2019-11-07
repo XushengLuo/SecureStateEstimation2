@@ -18,7 +18,7 @@ class SecureStateEsitmation:
         self.tol = 1e-5
         # performance of tolorance, with larger tol, it is susceptible to errors,
         # treating attacked as attacked-free and attacked-free as attacked.
-        with open('data/noise_sse_test_from_mat_n{0}_p{0}_{1}.mat'.format(n, trial), 'rb') as filehandle:
+        with open('data/sse_test_from_mat_n{0}_p{0}_{1}.mat'.format(n, trial), 'rb') as filehandle:
             self.Y = pickle.load(filehandle)
             self.obsMatrix = pickle.load(filehandle)
             self.p, self.n, self.tau = pickle.load(filehandle)
@@ -40,11 +40,11 @@ class SecureStateEsitmation:
         #     self.C = pickle.load(filehandle)
 
 
-for n in 20 * np.array(range(1, 11)):
+for n in 20 * np.array(range(10, 11)):
 
     time = []
     error = []
-    for trial in range(1, 11):
+    for trial in range(9, 10):
         # randomly generate data
         # testCase = TestCase()
         # with open('sse_test', 'wb') as filehandle:
@@ -93,6 +93,7 @@ for n in 20 * np.array(range(1, 11)):
         # m.Params.Aggregate = 0
         # m.Params.numericFocus = 3
         # m.Params.presolve = 0
+        m.Params.MIPGap = 1e-6
         m.optimize()
         time.append((datetime.datetime.now() - start).total_seconds())
         estimate = []

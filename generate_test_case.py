@@ -13,9 +13,9 @@ import pickle
 
 
 class TestCase(object):
-    def __init__(self):
-        self.p = 100
-        self.n = 200
+    def __init__(self, n, p):
+        self.p = p
+        self.n = n
         self.tau = self.n
         # Generate a system with a random A matrix
         self.A = random(self.n, self.n, 0.3)
@@ -84,8 +84,11 @@ class TestCase(object):
             #       O_p ]
 
 
-testCase = TestCase()
-with open('sse_test', 'wb') as filehandle:
+for p in 20 * np.array(range(1, 11)):
+    for trial in range(1, 11):
+        testCase = TestCase(50, p)
+        with open('data/sse_test_from_mat_n{0}_p{1}_{2}.mat'.format(testCase.n, testCase.p, trial),
+                  'wb+') as filehandle:
             pickle.dump(testCase.Y, filehandle)
             pickle.dump(testCase.obsMatrix, filehandle)
             pickle.dump([testCase.p, testCase.n, testCase.tau], filehandle)
@@ -96,3 +99,5 @@ with open('sse_test', 'wb') as filehandle:
             pickle.dump(testCase.A, filehandle)
             pickle.dump(testCase.C, filehandle)
             pickle.dump(testCase.s, filehandle)
+
+
