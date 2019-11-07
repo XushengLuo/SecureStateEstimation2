@@ -11,6 +11,7 @@ from itertools import product
 import scipy.linalg as la
 import warnings
 import pickle
+import sys
 
 
 class SecureStateEsitmation:
@@ -214,30 +215,30 @@ if __name__ == "__main__":
     # ------------- multiple time runtime --------------
     # ===================== large scale test ================================
     # from generate_test_case import TestCase
-    for noise in ['noiseless', 'noisy']:
+    for noise in ['noisy', 'noiseless']:
         for selection in ['worst', 'random']:
-            for p in 20 * np.array(range(1, 2)):
-                for percent in [1, 2, 3]:
-                    time = []
-                    error = []
-                    itera = []
-                    for system in range(1, 11):
-                        for r in range(1, 11):
-                            start = datetime.datetime.now()
-                            # e, t, i = main(50, p, trial)
-                            e, t, i = main(p, p, system, r, noise, percent, selection)
-                            if not t:
-                                print('=== Something goes wrong.. maybe noise too large or attack too weak ==')
-                                continue
-                            time.append(t)
-                            error.append(e)
-                            itera.append(i)
-                            print(e, t, i)
+            p = int(sys.argv[1])
+            for percent in [1, 2, 3, 4]:
+                time = []
+                error = []
+                itera = []
+                for system in range(1, 11):
+                    for r in range(1, 11):
+                        start = datetime.datetime.now()
+                        # e, t, i = main(50, p, trial)
+                        e, t, i = main(p, p, system, r, noise, percent, selection)
+                        if not t:
+                            print('=== Something goes wrong.. maybe noise too large or attack too weak ==')
+                            continue
+                        time.append(t)
+                        error.append(e)
+                        itera.append(i)
+                        print('MIQP', noise, selection, p, percent, e, t, i)
 
-                    with open('result/{0}_{1}_{2}_{3}.mat'.format(noise, selection, p, percent), 'wb+') as filehandle:
-                        pickle.dump(time, filehandle)
-                        pickle.dump(error, filehandle)
-                        pickle.dump(itera, filehandle)
+                with open('result/{0}_{1}_{2}_{3}.mat'.format(noise, selection, p, percent), 'wb+') as filehandle:
+                    pickle.dump(time, filehandle)
+                    pickle.dump(error, filehandle)
+                    pickle.dump(itera, filehandle)
     # ----------------- date from matlab ---------------
     # from data_from_mat import TestCase
     # testCase = TestCase()

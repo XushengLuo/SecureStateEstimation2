@@ -11,6 +11,8 @@ import numpy as np
 from control.matlab import *
 import pickle
 from itertools import combinations
+from scipy.io import savemat
+import sys
 
 
 class TestCase(object):
@@ -49,13 +51,13 @@ class TestCase(object):
         # upper bound for the noise
         self.tol = 1e-4
         if noise == 'noisy':
-            self.noise_bound = np.array([1.5]*self.p).reshape(self.p, 1)
+            self.noise_bound = np.array([1.5] * self.p).reshape(self.p, 1)
         elif noise == 'noiseless':
-            self.noise_bound = np.array([0]*self.p).reshape(self.p, 1)
+            self.noise_bound = np.array([0] * self.p).reshape(self.p, 1)
 
-        self.attack_lower_bound = 5
+        self.attack_lower_bound = 20
 
-        for percent in [1, 2, 3]:
+        for percent in [1, 2, 3, 4]:
             self.s = int(self.p * percent / 10)  # np.random.randint(0, self.max_s, 1)[0]
 
             # Choose a random attacking set K of size qs
@@ -65,7 +67,9 @@ class TestCase(object):
             for r in range(1, 11):
                 for scheme in ['random']:
                     self.Y, self.E = self.noisy_attack(noise)
-                    with open('data/{5}_sse_test_from_mat_n{0}_p{1}_{2}_{3}_{4}_{6}worst.mat'.format(self.n, self.p, system, r, scheme, noise, percent),
+                    with open('data/{5}_sse_test_from_mat_n{0}_p{1}_{2}_{3}_{4}_{6}worst.mat'.format(self.n, self.p,
+                                                                                                     system, r, scheme,
+                                                                                                     noise, percent),
                               'wb+') as filehandle:
                         pickle.dump(self.Y, filehandle)
                         pickle.dump(self.obsMatrix, filehandle)
@@ -78,6 +82,16 @@ class TestCase(object):
                         pickle.dump(self.C, filehandle)
                         pickle.dump(self.tol, filehandle)
                         pickle.dump(self.s, filehandle)
+
+                    savemat(
+                        '/Users/chrislaw/Box Sync/Research/SSE_Automatica2019/Imhotep-smt-master/ImhotepSMT/Examples/'
+                        'Random examples/Test2_sensors/{5}_sse_test_from_mat_n{0}_p{1}_{2}_{3}_{4}_{6}worst.mat'.format(self.n,
+                                                                                                          self.p,
+                                                                                                          system, r,
+                                                                                                          scheme, noise,
+                                                                                                          percent),
+                        mdict={'Y': self.Y, 'x0': self.x0, 'K': self.K,
+                               'A': self.A, 'C': self.C, 'noiseBound': self.noise_bound, 's': self.s})
 
     def noisy_attack(self, noise):
         # Choose an initial condition
@@ -98,24 +112,27 @@ class TestCase(object):
             E = np.concatenate((E, a), axis=1)
 
             # The measurement is y=C*x+a
-            y = self.C.dot(x) + a + noise_power * np.random.randn(self.p, 1)   # np.random.uniform(-1, 1, (self.p, 1))
+            y = self.C.dot(x) + a + noise_power * np.random.randn(self.p, 1)  # np.random.uniform(-1, 1, (self.p, 1))
             # Update the arrays X,Y,E
             Y = np.concatenate((Y, y), axis=1)
 
-            x = self.A.dot(x) + process_noise_power * np.random.randn(self.n, 1)  # np.random.uniform(-1, 1, (self.n, 1))
+            x = self.A.dot(x) + process_noise_power * np.random.randn(self.n,
+                                                                      1)  # np.random.uniform(-1, 1, (self.n, 1))
 
         return np.transpose(Y).reshape(np.size(Y), 1, order='F'), np.transpose(E).reshape(np.size(E), 1, order='F')
 
     def random_attack(self, system, trial, noise):
-        for percent in [1, 2, 3]:
+        for percent in [1, 2, 3, 4]:
             self.s = int(self.p * percent / 10)  # np.random.randint(0, self.max_s, 1)[0]
             per = np.random.permutation(self.p)
             self.K = per[0:self.s]
             for scheme in ['random']:
                 self.Y, self.E = self.noisy_attack(noise)
-                with open('data/{5}_sse_test_from_mat_n{0}_p{1}_{2}_{3}_{4}_{6}random.mat'.format(self.n, self.p, system, trial,
-                                                                                                 scheme, noise, percent),
-                          'wb+') as filehandle:
+                with open(
+                        'data/{5}_sse_test_from_mat_n{0}_p{1}_{2}_{3}_{4}_{6}random.mat'.format(self.n, self.p, system,
+                                                                                                trial,
+                                                                                                scheme, noise, percent),
+                        'wb+') as filehandle:
                     pickle.dump(self.Y, filehandle)
                     pickle.dump(self.obsMatrix, filehandle)
                     pickle.dump([self.p, self.n, self.tau], filehandle)
@@ -128,11 +145,18 @@ class TestCase(object):
                     pickle.dump(self.tol, filehandle)
                     pickle.dump(self.s, filehandle)
 
+                savemat('/Users/chrislaw/Box Sync/Research/SSE_Automatica2019/Imhotep-smt-master/ImhotepSMT/Examples/'
+                        'Random examples/Test2_sensors/{5}_sse_test_from_mat_n{0}_p{1}_{2}_{3}_{4}_{6}random.mat'.format(
+                    self.n, self.p, system, trial,
+                    scheme, noise, percent),
+                    mdict={'Y': self.Y, 'x0': self.x0, 'K': self.K,
+                           'A': self.A, 'C': self.C, 'noiseBound': self.noise_bound, 's': self.s})
 
-for p in 20 * np.array(range(1, 11)):
-    for noise in ['noiseless', 'noisy']:
-        for system in range(1, 11):
-            print(p, noise, system)
-            test_case = TestCase(p, p, system, noise)
-            for trial in range(1, 11):
-                    test_case.random_attack(system, trial, noise)
+
+p = int(sys.argv[1])
+for noise in ['noisy', 'noiseless']:
+    for system in range(1, 11):
+        print(p, noise, system)
+        test_case = TestCase(p, p, system, noise)
+        for trial in range(1, 11):
+            test_case.random_attack(system, trial, noise)

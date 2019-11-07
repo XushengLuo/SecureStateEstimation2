@@ -15,7 +15,7 @@ def complexity(p, max_s):
 
 
 # print(complexity(10, 4))
-
+# ----------------- propertiew of LTI system --------------------------
 import pickle
 for def_s in [2, 3, 4]:
     delta = []
