@@ -299,11 +299,11 @@ plt.rcParams.update({'font.size': 14, 'legend.fontsize': 12})
 
 
 # ------------------------------------supplemental complexity test vs # sensors --------------------------------------
-# search_50_p = np.array([32.4000,64.4000,96.7000,131.9000,164.9000,199.6000,231.2000,263.0000,297.4000,333.5000])
+# search_50_p = np.array([32.4000,64.4000,96.7000,131.9000,164.9000,199.6000,231.2000,263.0000,297.4000,333.5000])*2
 # search_100_p = np.array(
-#     [32.7000,64.3000,97.7000,132.0000,165.7000,197.7000,234.0000,265.5000,298.1000,330.4000])
+#     [32.7000,64.3000,97.7000,132.0000,165.7000,197.7000,234.0000,265.5000,298.1000,330.4000])*2
 # search_200_p = np.array(
-#     [31.3000,62.4000,99.9000,130.9000,164.6000,196.8000,230.2000,264.8000,298.8000,332.5000])
+#     [31.3000,62.4000,99.9000,130.9000,164.6000,196.8000,230.2000,264.8000,298.8000,332.5000])*2
 #
 # p = 20 * np.array(range(1, 11))
 #
@@ -312,22 +312,22 @@ plt.rcParams.update({'font.size': 14, 'legend.fontsize': 12})
 # l3 = ax[0].plot(p, search_100_p, 'g--s')
 # l1 = ax[0].plot(p, search_200_p, 'b--d')
 #
-# ax[0].legend([r'n=50', r'n=100', r'n=200'])
+# ax[0].legend([r'n=50', r'n=100', r'n=200'], ncol=3, loc='upper center', bbox_to_anchor=(0.35, 1))
 # ax[0].set_xlabel(r'Number of sensors', usetex=True)
-# ax[0].set_ylabel(r'Number of iterations', usetex=True)
+# ax[0].set_ylabel(r'Number of nodes', usetex=True)
 #
 # ax[0].set_xticks(p)
-# ax[0].set_yticks(60 * np.array(range(1, 7)))
+# ax[0].set_yticks(200 * np.array(range(1, 4)))
 # # fig.tight_layout()
 #
 # # plt.savefig('/Users/chrislaw/Box Sync/Research/SSE/figure/complexity_test_p.pdf', bbox_inches='tight', dpi=600)
 # # plt.show()
-# # ------------------------------------supplemental complexity test vs # sensors --------------------------------------
-# search_50_n = np.array([82.9000,81.3000,81.7000,82.8000,81.7000,80.7000,83.2000,82.4000,80.7000,80.4000])
+# # # ------------------------------------supplemental complexity test vs # sensors --------------------------------------
+# search_50_n = np.array([82.9000,81.3000,81.7000,82.8000,81.7000,80.7000,83.2000,82.4000,80.7000,80.4000])*2
 # search_100_n = np.array(
-#     [166.3000,165.2000,165.3000,165.3000,164.6000,163.4000,164.9000,165.8000,165.0000,165.2000])
+#     [166.3000,165.2000,165.3000,165.3000,164.6000,163.4000,164.9000,165.8000,165.0000,165.2000])*2
 # search_200_n = np.array(
-#     [332.1000,332.6000,334.2000,330.7000,332.5000,332.2000,333.4000,332.1000,330.8000,331.1000])
+#     [332.1000,332.6000,334.2000,330.7000,332.5000,332.2000,333.4000,332.1000,330.8000,331.1000])*2
 #
 # n = 20 * np.array(range(1, 11))
 #
@@ -335,19 +335,19 @@ plt.rcParams.update({'font.size': 14, 'legend.fontsize': 12})
 # l3 = ax[1].plot(n, search_100_n, 'g--s')
 # l1 = ax[1].plot(n, search_200_n, 'b--d')
 #
-# ax[1].legend([r'p=50', r'p=100', r'p=200'])
+# ax[1].legend([r'p=50', r'p=100', r'p=200'], ncol=3, loc='upper center', bbox_to_anchor=(0.35, 0.85))
 # ax[1].set_xlabel(r'Number of states', usetex=True)
-# ax[1].set_ylabel(r'Number of iterations', usetex=True)
+# ax[1].set_ylabel(r'Number of nodes', usetex=True)
 #
 # ax[1].set_xticks(n)
-# ax[1].set_yticks(80 * np.array(range(1, 6)))
+# # ax[1].set_yticks(80 * np.array(range(1, 6)))
 # fig.tight_layout()
 #
-# plt.savefig('/Users/chrislaw/Box Sync/Research/SSE/figure/complexity_test.pdf', bbox_inches='tight', dpi=600)
+# plt.savefig('/Users/chrislaw/Box Sync/Research/SSE_Automatica2019/figure/complexity_test.pdf', bbox_inches='tight', dpi=600)
 # plt.show()
-
-import matplotlib.pyplot as plt
-import numpy as np
+#
+# import matplotlib.pyplot as plt
+# import numpy as np
 
 # construct some data like what you have:
 # fig, ax = plt.subplots(2, 1)
@@ -424,73 +424,528 @@ import numpy as np
 # 3, noisy, random, 15.7475, 3.3269721594867607, 11, 47, 0.11444131522683518
 # 4, noisy, random, 17.2775, 4.179771973445441, 12, 42, 0.18553701119517657
 
-
-import pickle
-
-with open('result_small', 'rb') as filehandle:
-    result = pickle.load(filehandle)
-
-fig, ax = plt.subplots(1, 2)
-means = result[range(6), 0]
-std = result[range(6), 1]
-mins = result[range(6), 2]
-maxes = result[range(6), 3]
-
-# create stacked errorbars:
-ax[0].errorbar(np.array([2, 3, 4]), means[range(3, 6)], std[range(3, 6)], fmt='.c', ecolor='c', lw=19, label='random attack')
-ax[0].errorbar(np.array([2.3, 3.3, 4.3]), means[range(3)], std[range(3)], fmt='.m', ecolor='m', lw=19, label='greedy attack')
-
-ax[0].errorbar(np.array([2.3, 3.3, 4.3]), means[range(3)], [means[range(3)] - mins[range(3)],
-                                                     maxes[range(3)] - means[range(3)]],
-             fmt='.k', markersize=8, ecolor='k', lw=1, capsize=5, capthick=1)
-ax[0].errorbar(np.array([2, 3, 4]), means[range(3, 6)], [means[range(3, 6)] - mins[range(3, 6)],
-                                                     maxes[range(3, 6)] - means[range(3, 6)]],
-             fmt='.k', markersize=8, ecolor='k', lw=1, capsize=5, capthick=1)
-# plt.plot(np.arange(8), means+3, '*k')
-# ax[0].plot([2,3,4,5,6,7], worst, '*r', markersize=10, label='appear first')
-ax[0].legend(ncol=1, bbox_to_anchor=(0.8, 1.0))
-ax[0].set_xlabel(r'$\bar{s}$')
-
-ax[0].set_yticks([10, 15, 20, 25, 30, 35, 40, 45, 50])
-
-ax[0].set_xticks(np.array([1.8, 2.15, 3.15, 4.15, 4.5]))
-ax[0].set_xticklabels([None, 2, 3,  4])
-ax[0].set_ylabel('Number of iterations')
-ax[0].set_title('(a) Noiseless case', y=-0.25)
-# fig.tight_layout()
-
-means = result[range(6, 12), 0]
-std = result[range(6, 12), 1]
-mins = result[range(6, 12), 2]
-maxes = result[range(6, 12), 3]
-
-# create stacked errorbars:
-ax[1].errorbar(np.array([2, 3, 4]), means[range(3, 6)], std[range(3, 6)], fmt='.c', ecolor='c', lw=19, label='random attack')
-
-ax[1].errorbar(np.array([2.3, 3.3, 4.3]), means[range(3)], std[range(3)], fmt='.m', ecolor='m', lw=19, label='greedy attack')
-
-ax[1].errorbar(np.array([2, 3, 4]), means[range(3, 6)], [means[range(3, 6)] - mins[range(3, 6)],
-                                                     maxes[range(3, 6)] - means[range(3, 6)]],
-             fmt='.k', markersize=8, ecolor='k', lw=1, capsize=5, capthick=1)
-
-ax[1].errorbar(np.array([2.3, 3.3, 4.3]), means[range(3)], [means[range(3)] - mins[range(3)],
-                                                     maxes[range(3)] - means[range(3)]],
-             fmt='.k', markersize=8, ecolor='k', lw=1, capsize=5, capthick=1)
-
-# plt.plot(np.arange(8), means+3, '*k')
-# plt.xlim(-1, 8)
-# ax[1].plot([2,3,4,5,6,7], worst, '*r', markersize=10, label='appear first')
-# ax[1].axvline(4.5, which='major', linestyle='-.', color='gray')  # vertical lines
-
-ax[1].set_xlabel(r'$\bar{s}$')
-ax[1].set_yticks([10, 15, 20, 25, 30, 35, 40, 45, 50])
-
-# ax[1].set_xticks(np.array([2,3,4,5,6,7]))
-# ax[1].set_xticklabels([2,3,4,2,3,4])
+# ----------------- small system -------------------
+# import pickle
+#
+# with open('result_small_iter', 'rb') as filehandle:
+#     result = pickle.load(filehandle)
+#
+# fig, ax = plt.subplots(1, 2)
+# means = result[range(6), 0]
+# std = result[range(6), 1]
+# mins = result[range(6), 2]
+# maxes = result[range(6), 3]
+#
+# # create stacked errorbars:
+# ax[0].errorbar(np.array([2, 3, 4]), means[range(3, 6)], std[range(3, 6)], fmt='.c', ecolor='c', lw=17,
+#                label='random attack', alpha=0.5)
+# ax[0].errorbar(np.array([2.3, 3.3, 4.3]), means[range(3)], std[range(3)], fmt='.m', ecolor='m', lw=17,
+#                label='greedy attack', alpha=0.5)
+#
+# ax[0].errorbar(np.array([2.3, 3.3, 4.3]), means[range(3)], [means[range(3)] - mins[range(3)],
+#                                                      maxes[range(3)] - means[range(3)]],
+#              fmt='.k', markersize=8, ecolor='m', lw=1, capsize=5, capthick=1)
+# ax[0].errorbar(np.array([2, 3, 4]), means[range(3, 6)], [means[range(3, 6)] - mins[range(3, 6)],
+#                                                      maxes[range(3, 6)] - means[range(3, 6)]],
+#              fmt='.k', markersize=8, ecolor='c', lw=1, capsize=5, capthick=1)
+# # plt.plot(np.arange(8), means+3, '*k')
+# # ax[0].plot([2,3,4,5,6,7], worst, '*r', markersize=10, label='appear first')
+# ax[0].legend(ncol=1, bbox_to_anchor=(0.8, 1.0))
+# ax[0].set_xlabel(r'$\bar{s}$')
+#
+# ax[0].set_yticks([10, 20, 30, 40, 50, 60])
+#
+# ax[0].set_xticks(np.array([1.8, 2.15, 3.15, 4.15, 4.5]))
+# ax[0].set_xticklabels([None, 2, 3,  4])
+# ax[0].set_ylabel('Number of iterations')
+# ax[0].set_title('(a) Noiseless case', y=-0.25)
+# # fig.tight_layout()
+#
+# means = result[range(6, 12), 0]
+# std = result[range(6, 12), 1]
+# mins = result[range(6, 12), 2]
+# maxes = result[range(6, 12), 3]
+#
+# # create stacked errorbars:
+# ax[1].errorbar(np.array([2, 3, 4]), means[range(3, 6)], std[range(3, 6)], fmt='.c', ecolor='c', lw=17,
+#                label='random attack', alpha=0.5)
+#
+# ax[1].errorbar(np.array([2.3, 3.3, 4.3]), means[range(3)], std[range(3)], fmt='.m', ecolor='m', lw=17,
+#                label='greedy attack', alpha=0.5)
+#
+# ax[1].errorbar(np.array([2, 3, 4]), means[range(3, 6)], [means[range(3, 6)] - mins[range(3, 6)],
+#                                                      maxes[range(3, 6)] - means[range(3, 6)]],
+#              fmt='.k', markersize=8, ecolor='c', lw=1, capsize=5, capthick=1)
+#
+# ax[1].errorbar(np.array([2.3, 3.3, 4.3]), means[range(3)], [means[range(3)] - mins[range(3)],
+#                                                      maxes[range(3)] - means[range(3)]],
+#              fmt='.k', markersize=8, ecolor='m', lw=1, capsize=5, capthick=1)
+#
+# # plt.plot(np.arange(8), means+3, '*k')
+# # plt.xlim(-1, 8)
+# # ax[1].plot([2,3,4,5,6,7], worst, '*r', markersize=10, label='appear first')
+# # ax[1].axvline(4.5, which='major', linestyle='-.', color='gray')  # vertical lines
+#
 # ax[1].set_xlabel(r'$\bar{s}$')
-ax[1].set_xticks(np.array([1.8, 2.15, 3.15, 4.15, 4.5]))
-ax[1].set_xticklabels([None, 2, 3,  4])
-# ax[1].set_ylabel('iterations')
-ax[1].set_title('(b) Noisy case', y=-0.25)
-plt.show()
+# ax[1].set_yticks([10, 20, 30, 40, 50, 60])
+#
+# # ax[1].set_xticks(np.array([2,3,4,5,6,7]))
+# # ax[1].set_xticklabels([2,3,4,2,3,4])
+# # ax[1].set_xlabel(r'$\bar{s}$')
+# ax[1].set_xticks(np.array([1.8, 2.15, 3.15, 4.15, 4.5]))
+# ax[1].set_xticklabels([None, 2, 3,  4])
+# # ax[1].set_ylabel('iterations')
+# ax[1].set_title('(b) Noisy case', y=-0.25)
+# plt.subplots_adjust(bottom=0.18, top=0.91, wspace=0.25)
+# plt.savefig('/Users/chrislaw/Box Sync/Research/SSE_Automatica2019/figure/small_noisy.pdf', bbox_inches='tight', dpi=600)
+# plt.show()
 
+
+# --------------------- scalability ---------------
+import pickle
+import scipy.io as sio
+
+a = ['a', 'b', 'c']
+n = [10, 20, 30]
+
+for noise in ['noiseless', 'noisy']:
+    fig, ax_itera = plt.subplots(1, 3)
+    for percent in [1, 2, 3]:
+        sensor = [[], []]
+        means = [[], []]
+        std = [[], []]
+        mins = [[], []]
+        maxes = [[], []]
+
+        means_itera = [[], []]
+        std_itera = [[], []]
+        mins_itera = [[], []]
+        maxes_itera = [[], []]
+
+        sensor_ml = [[], []]
+        means_ml = [[], []]
+        std_ml = [[], []]
+        mins_ml = [[], []]
+        maxes_ml = [[], []]
+
+        means_error = [[], []]
+        std_error = [[], []]
+        mins_error = [[], []]
+        maxes_error = [[], []]
+
+        mistake_ratio = [[], []]
+
+        for p in range(1, 11):
+            with open('result/{0}_{1}_{2}_{3}.mat'.format(noise, 'random', p*20, percent), 'rb') as filehandle:
+                time = pickle.load(filehandle)
+                error = pickle.load(filehandle)
+                itera = (np.array(pickle.load(filehandle)))
+                mistake = pickle.load(filehandle)
+            sensor[0].append(p*20)
+            means[0].append(np.mean(time))
+            std[0].append(np.std(time))
+            mins[0].append(np.min(time))
+            maxes[0].append(np.max(time))
+
+            means_itera[0].append(np.mean(itera))
+            std_itera[0].append(np.std(itera))
+            mins_itera[0].append(np.min(itera))
+            maxes_itera[0].append(np.max(itera))
+
+            means_error[0].append(np.mean(error))
+            std_error[0].append(np.std(error))
+            mins_error[0].append(np.min(error))
+            maxes_error[0].append(np.max(error))
+
+            mistake_ratio[0].append(len(mistake)/25)
+
+            data = sio.loadmat('/Users/chrislaw/Box Sync/Research/SSE_Automatica2019/Imhotep-smt-master/ImhotepSMT/Examples/'
+                            'Random examples/{0}_{1}_{2}_{3}.mat'.format(noise, 'random', p*20, percent))
+            time_ml = data['TimeSpent']
+            error_ml = data['error']
+            mistake_ml = data['mistake']
+
+            sensor_ml[0].append(p*20)
+            means_ml[0].append(np.mean(time_ml))
+            std_ml[0].append(np.std(time_ml))
+            mins_ml[0].append(np.min(time_ml))
+            maxes_ml[0].append(np.max(time_ml))
+
+            if p == 10:
+                print(noise, percent, np.mean(time), np.mean(time_ml))
+
+            with open('result/{0}_{1}_{2}_{3}.mat'.format(noise, 'worst', p*20, percent), 'rb') as filehandle:
+                time = pickle.load(filehandle)
+                error = pickle.load(filehandle)
+                itera = (np.array(pickle.load(filehandle)))
+                mistake = pickle.load(filehandle)
+
+            sensor[1].append(p*20)
+            means[1].append(np.mean(time))
+            std[1].append(np.std(time))
+            mins[1].append(np.min(time))
+            maxes[1].append(np.max(time))
+
+            means_itera[1].append(np.mean(itera))
+            std_itera[1].append(np.std(itera))
+            mins_itera[1].append(np.min(itera))
+            maxes_itera[1].append(np.max(itera))
+
+            means_error[1].append(np.mean(error))
+            std_error[1].append(np.std(error))
+            mins_error[1].append(np.min(error))
+            maxes_error[1].append(np.max(error))
+
+            mistake_ratio[1].append(len(mistake)/25)
+
+
+            data = sio.loadmat(
+                '/Users/chrislaw/Box Sync/Research/SSE_Automatica2019/Imhotep-smt-master/ImhotepSMT/Examples/'
+                'Random examples/{0}_{1}_{2}_{3}.mat'.format(noise, 'worst', p * 20, percent))
+            time_ml = data['TimeSpent']
+            error_ml = data['error']
+            mistake_ml = data['mistake']
+
+            sensor_ml[1].append(p*20)
+            means_ml[1].append(np.mean(time_ml))
+            std_ml[1].append(np.std(time_ml))
+            mins_ml[1].append(np.min(time_ml))
+            maxes_ml[1].append(np.max(time_ml))
+
+        # --------------- runtime  -----------------
+        # fig, ax = plt.subplots(1, 2)
+        #
+        # # create stacked errorbars:
+        # ax[0].errorbar(sensor[0], means[0], std[0], fmt='.c', ecolor='c', lw=15, label='Alg.1', alpha=0.3)
+        #
+        # ax[0].errorbar(sensor[0], means[0], [np.array(means[0]) - np.array(mins[0]),
+        #                                      np.array(maxes[0]) - np.array(means[0])],
+        #              fmt='.k', markersize=5, ecolor='c', lw=1, capsize=5, capthick=1)
+        # ax[0].plot(sensor[0], means[0], '-c', markersize=1)
+        #
+        # ax[0].errorbar(sensor_ml[0], means_ml[0], std_ml[0], fmt='.m', ecolor='m', lw=15, label='IMHOTEP-SMT', alpha=0.3)
+        #
+        # ax[0].errorbar(sensor_ml[0], means_ml[0], [np.array(means_ml[0]) - np.array(mins_ml[0]),
+        #                                      np.array(maxes_ml[0]) - np.array(means_ml[0])],
+        #              fmt='.k', markersize=5, ecolor='m', lw=1, capsize=5, capthick=1)
+        # ax[0].plot(sensor_ml[0], means_ml[0], '-m', markersize=1)
+        #
+        # ax[0].legend(ncol=1, bbox_to_anchor=(0.87, 1.0))
+        # ax[0].set_xlabel(r'${p=n}$')
+        # ax[0].set_xticks(np.array([0, 40, 80, 120, 160, 200]))
+        #
+        # ax[0].set_yticks(np.array(range(0, int(np.max(maxes_ml[0])//200+2)))*200)
+        #
+        # # # ax[0].set_xticklabels([None, 2, 3,  4])
+        # ax[0].set_ylabel('Time(sec)')
+        # ax[0].set_title('Random attack', y=-0.23)
+        #
+        # ax[1].errorbar(sensor[1], means[1], std[1], fmt='.c', ecolor='c', lw=15, alpha=0.3)
+        # ax[1].errorbar(sensor[1], means[1], [np.array(means[1]) - np.array(mins[1]),
+        #                                                np.array(maxes[1]) - np.array(means[1])],
+        #              fmt='.k', markersize=5, ecolor='c', lw=1, capsize=5, capthick=1)
+        # ax[1].plot(sensor[1], means[1], '-c', markersize=1)
+        #
+        # ax[1].errorbar(sensor_ml[1], means_ml[1], std_ml[1], fmt='.m', ecolor='m', lw=15, alpha=0.3)
+        #
+        # ax[1].errorbar(sensor_ml[1], means_ml[1], [np.array(means_ml[1]) - np.array(mins_ml[1]),
+        #                                      np.array(maxes_ml[1]) - np.array(means_ml[1])],
+        #              fmt='.k', markersize=5, ecolor='m', lw=1, capsize=5, capthick=1)
+        # ax[1].plot(sensor_ml[1], means_ml[1], '-m', markersize=1)
+        #
+        # ax[1].set_xlabel(r'${p=n}$')
+        # ax[1].set_xticks(np.array([0, 40, 80, 120, 160, 200]))
+        # ax[1].set_yticks(np.array(range(0, int(np.max(maxes_ml[0])//200+2)))*200)
+        # ax[1].set_title('Greedy attack', y=-0.23)
+        #
+        # plt.subplots_adjust(bottom=0.17, top=0.9, wspace=0.25)
+        #
+        # plt.savefig('/Users/chrislaw/Box Sync/Research/SSE_Automatica2019/figure/{0}_{1}.pdf'.format(noise, percent), bbox_inches='tight', dpi=600)
+
+    #     ------------- number of iterations ------------------
+        ax_itera[percent-1].errorbar(sensor[0], means_itera[0], std_itera[0], fmt='.c', ecolor='c', lw=10,
+                                     label='random attack', alpha=0.3)
+
+        ax_itera[percent-1].errorbar(sensor[0], means_itera[0], [np.array(means_itera[0]) - np.array(mins_itera[0]),
+                                             np.array(maxes_itera[0]) - np.array(means_itera[0])],
+                     fmt='.k', markersize=5, ecolor='c', lw=1, capsize=5, capthick=1)
+        ax_itera[percent-1].plot(sensor[0], means_itera[0], '-c', markersize=1)
+
+        ax_itera[percent-1].set_xticks(np.array([0, 40, 120, 200]))
+        # ax_itera[percent-1].set_xlabel(r'${p=n}$')
+        ax_itera[percent-1].ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+
+        ax_itera[percent-1].errorbar(sensor[1], means_itera[1], std_itera[1], fmt='.m', ecolor='m', lw=10,
+                                     label='greedy attack', alpha=0.3)
+        ax_itera[percent-1].errorbar(sensor[1], means_itera[1], [np.array(means_itera[1]) - np.array(mins_itera[1]),
+                                                       np.array(maxes_itera[1]) - np.array(means_itera[1])],
+                     fmt='.k', markersize=5, ecolor='m', lw=1, capsize=5, capthick=1)
+        ax_itera[percent-1].plot(sensor[1], means_itera[1], '-m', markersize=1)
+        ax_itera[percent-1].set_title(r'({0}) $s/p={1}\%$'.format(a[percent - 1], n[percent - 1]), y=-0.18)
+        ax_itera[percent-1].set_yticks(np.array(range(0, 5))*100)
+
+    ax_itera[0].set_ylabel(r'Number of iterations')
+    ax_itera[0].legend(ncol=2, loc='upper center', bbox_to_anchor=(1.6, 1.2))
+
+    plt.subplots_adjust(bottom=0.15, top=0.85)
+    plt.savefig('/Users/chrislaw/Box Sync/Research/SSE_Automatica2019/figure/iter_{0}.pdf'.format(noise), bbox_inches='tight', dpi=600)
+    #
+    # ------------- accuracy ------------------
+    #     ax_itera[percent - 1].errorbar(sensor[0], means_error[0], std_error[0], fmt='.c', ecolor='c', lw=5,
+    #                                    label='random attack', alpha=0.3)
+    #
+    #     ax_itera[percent - 1].errorbar(sensor[0], means_error[0], [np.array(means_error[0]) - np.array(mins_error[0]),
+    #                                                                np.array(maxes_error[0]) - np.array(means_error[0])],
+    #                                    fmt='.k', markersize=5, ecolor='c', lw=1, capsize=5, capthick=1)
+    #     ax_itera[percent - 1].plot(sensor[0], means_error[0], '-c', markersize=1)
+    #
+    #     ax_itera[percent - 1].set_xticks(np.array([0, 40, 120, 200]))
+    #     # ax_itera[percent-1].set_xlabel(r'${p=n}$')
+    #     # ax_itera[percent - 1].ticklabel_format(style='sci', axis='y', scilimits=(-2, 0))
+    #
+    #     ax_itera[percent - 1].errorbar(sensor[1], means_error[1], std_error[1], fmt='.m', ecolor='m', lw=5,
+    #                                    label='greedy attack', alpha=0.3)
+    #     ax_itera[percent - 1].errorbar(sensor[1], means_error[1], [np.array(means_error[1]) - np.array(mins_error[1]),
+    #                                                                np.array(maxes_error[1]) - np.array(means_error[1])],
+    #                                    fmt='.k', markersize=5, ecolor='m', lw=1, capsize=5, capthick=1)
+    #     ax_itera[percent - 1].plot(sensor[1], means_error[1], '-m', markersize=1)
+    #     ax_itera[percent - 1].set_title(r'({0}) $s/p={1}\%$'.format(a[percent - 1], n[percent - 1]), y=-0.18)
+    #     # ax_itera[percent - 1].set_yticks(np.array(range(0, 9)) * 100)
+    #
+    #
+    #
+    # # ax_itera[1].set_xticks(np.array([0, 40, 120, 200]))
+    #     # ax_itera[1].set_xlabel(r'${p=n}$')
+    #     # ax_itera[1].ticklabel_format(style='sci', axis='y', scilimits=(0,0))
+    # ax_itera[0].set_ylabel(r'$\|x^* - x_0\|_2 / \|x_0\|_2$', usetex=True)
+    # ax_itera[0].legend(ncol=2, loc='upper center', bbox_to_anchor=(1.6, 1.2))
+    #
+    # plt.subplots_adjust(bottom=0.15, top=0.85, wspace=0.27)
+    # plt.savefig('/Users/chrislaw/Box Sync/Research/SSE_Automatica2019/figure/error_{0}.pdf'.format(noise), bbox_inches='tight', dpi=600)
+plt.show()
+    # for percent in [1]:
+    #     for p in range(1, 11):
+
+
+
+
+
+
+# search_50_p = np.array([32.4000,64.4000,96.7000,131.9000,164.9000,199.6000,231.2000,263.0000,297.4000,333.5000])*2
+# search_100_p = np.array(
+#     [32.7000,64.3000,97.7000,132.0000,165.7000,197.7000,234.0000,265.5000,298.1000,330.4000])*2
+# search_200_p = np.array(
+#     [31.3000,62.4000,99.9000,130.9000,164.6000,196.8000,230.2000,264.8000,298.8000,332.5000])*2
+#
+# p = 20 * np.array(range(1, 11))
+#
+# fig, ax = plt.subplots(2, 1)
+# l2 = ax[0].plot(p, search_50_p, 'r--o')
+# l3 = ax[0].plot(p, search_100_p, 'g--s')
+# l1 = ax[0].plot(p, search_200_p, 'b--d')
+#
+# ax[0].legend([r'n=50', r'n=100', r'n=200'], ncol=3, loc='upper center', bbox_to_anchor=(0.35, 1))
+# ax[0].set_xlabel(r'Number of sensors', usetex=True)
+# ax[0].set_ylabel(r'Number of nodes', usetex=True)
+#
+# ax[0].set_xticks(p)
+# ax[0].set_yticks(200 * np.array(range(1, 4)))
+# # fig.tight_layout()
+#
+# # plt.savefig('/Users/chrislaw/Box Sync/Research/SSE/figure/complexity_test_p.pdf', bbox_inches='tight', dpi=600)
+# # plt.show()
+# # # ------------------------------------supplemental complexity test vs # sensors --------------------------------------
+# search_50_n = np.array([82.9000,81.3000,81.7000,82.8000,81.7000,80.7000,83.2000,82.4000,80.7000,80.4000])*2
+# search_100_n = np.array(
+#     [166.3000,165.2000,165.3000,165.3000,164.6000,163.4000,164.9000,165.8000,165.0000,165.2000])*2
+# search_200_n = np.array(
+#     [332.1000,332.6000,334.2000,330.7000,332.5000,332.2000,333.4000,332.1000,330.8000,331.1000])*2
+#
+# n = 20 * np.array(range(1, 11))
+#
+# l2 = ax[1].plot(n, search_50_n, 'r--o')
+# l3 = ax[1].plot(n, search_100_n, 'g--s')
+# l1 = ax[1].plot(n, search_200_n, 'b--d')
+#
+# ax[1].legend([r'p=50', r'p=100', r'p=200'], ncol=3, loc='upper center', bbox_to_anchor=(0.35, 0.85))
+# ax[1].set_xlabel(r'Number of states', usetex=True)
+# ax[1].set_ylabel(r'Number of nodes', usetex=True)
+#
+# ax[1].set_xticks(n)
+# # ax[1].set_yticks(80 * np.array(range(1, 6)))
+# fig.tight_layout()
+#
+# plt.savefig('/Users/chrislaw/Box Sync/Research/SSE_Automatica2019/figure/complexity_test.pdf', bbox_inches='tight', dpi=600)
+# plt.show()
+
+# -------------- supplementary complexity  -----------------
+# import pickle
+# import scipy.io as sio
+#
+# a = ['g', 'c', 'm']
+# n = [10, 20, 30]
+#
+# fig, ax_itera = plt.subplots(2, 1)
+# for noise in ['noiseless']:
+#     for percent in [3]:
+#         for index, n in enumerate([50, 100, 200]):
+#             sensor = [[], []]
+#             means_itera = [[], []]
+#             std_itera = [[], []]
+#             mins_itera = [[], []]
+#             maxes_itera = [[], []]
+#             for p in range(1, 11):
+#                 with open('result/complexity_{0}_{1}_{2}_{3}_{4}.mat'.format('noiseless', 'random', p*20, n, 3), 'rb') as filehandle:
+#                     time = pickle.load(filehandle)
+#                     error = pickle.load(filehandle)
+#                     itera = (np.array(pickle.load(filehandle)))
+#                     mistake = pickle.load(filehandle)
+#
+#                 sensor[0].append(p*20)
+#                 means_itera[0].append(np.mean(itera))
+#                 std_itera[0].append(np.std(itera))
+#                 mins_itera[0].append(np.min(itera))
+#                 maxes_itera[0].append(np.max(itera))
+#
+#             ax_itera[0].errorbar(sensor[0], means_itera[0], std_itera[0], fmt='.{0}'.format(a[index]),
+#                                  ecolor='{0}'.format(a[index]), lw=10,
+#                                  label=r'$n={0}$'.format(n), alpha=0.3)
+#
+#             ax_itera[0].errorbar(sensor[0], means_itera[0], [np.array(means_itera[0]) - np.array(mins_itera[0]),
+#                                                              np.array(maxes_itera[0]) - np.array(means_itera[0])],
+#                                  fmt='.k', markersize=5, ecolor='{0}'.format(a[index]), lw=1, capsize=5, capthick=1)
+#             ax_itera[0].plot(sensor[0], means_itera[0], '-{0}'.format(a[index]), markersize=1)
+#
+#             ax_itera[0].set_xticks(np.array([0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200]))
+#             ax_itera[0].set_xlabel(r'${p}$')
+#             # ax_itera[0].ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
+#
+#             ax_itera[0].set_ylabel(r'Number of iterations')
+#
+#             # plt.subplots_adjust(bottom=0.15, top=0.85)
+#
+#         ax_itera[0].legend(ncol=1, loc='upper center', bbox_to_anchor=(0.15, 1))
+#
+#         for index, p in enumerate([50, 100, 200]):
+#             sensor = [[], []]
+#             means_itera = [[], []]
+#             std_itera = [[], []]
+#             mins_itera = [[], []]
+#             maxes_itera = [[], []]
+#             for n in range(1, 11):
+#                 with open('result/pcomplexity_{0}_{1}_{2}_{3}_{4}.mat'.format('noiseless', 'random', p, n*20, 3), 'rb') as filehandle:
+#                     time = pickle.load(filehandle)
+#                     error = pickle.load(filehandle)
+#                     itera = (np.array(pickle.load(filehandle)))
+#                     mistake = pickle.load(filehandle)
+#
+#                 sensor[0].append(n*20)
+#                 means_itera[0].append(np.mean(itera))
+#                 std_itera[0].append(np.std(itera))
+#                 mins_itera[0].append(np.min(itera))
+#                 maxes_itera[0].append(np.max(itera))
+#
+#             ax_itera[1].errorbar(sensor[0], means_itera[0], std_itera[0], fmt='.{0}'.format(a[index]),
+#                                  ecolor='{0}'.format(a[index]), lw=10,
+#                                  label=r'$p={0}$'.format(p), alpha=0.3)
+#
+#             ax_itera[1].errorbar(sensor[0], means_itera[0], [np.array(means_itera[0]) - np.array(mins_itera[0]),
+#                                                              np.array(maxes_itera[0]) - np.array(means_itera[0])],
+#                                  fmt='.k', markersize=5, ecolor='{0}'.format(a[index]), lw=1, capsize=5, capthick=1)
+#             ax_itera[1].plot(sensor[0], means_itera[0], '-{0}'.format(a[index]), markersize=1)
+#
+#             ax_itera[1].set_xticks(np.array([0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200]))
+#             ax_itera[1].set_xlabel(r'${n}$')
+#             # ax_itera[1].ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
+#
+#             ax_itera[1].set_ylabel(r'Number of iterations')
+#         ax_itera[1].legend(ncol=3, loc='upper center', bbox_to_anchor=(0.4, 0.85))
+#         plt.subplots_adjust(top=0.92, hspace=0.37)
+#         plt.savefig('/Users/chrislaw/Box Sync/Research/SSE_Automatica2019/figure/complexity_test.pdf', bbox_inches='tight', dpi=600)
+#
+# plt.show()
+
+# -------------- supplementary complexity runtime -----------------
+# a = ['g', 'c', 'm']
+# n = [10, 20, 30]
+#
+# fig, ax_time = plt.subplots(2, 1)
+# for noise in ['noiseless']:
+#     for percent in [3]:
+#         for index, n in enumerate([50, 100, 200]):
+#             sensor = [[], []]
+#             means_time = [[], []]
+#             std_time = [[], []]
+#             mins_time = [[], []]
+#             maxes_time = [[], []]
+#             for p in range(1, 11):
+#                 with open('result/complexity_{0}_{1}_{2}_{3}_{4}.mat'.format('noiseless', 'random', p*20, n, 3), 'rb') as filehandle:
+#                     time = pickle.load(filehandle)
+#                     error = pickle.load(filehandle)
+#                     itera = (np.array(pickle.load(filehandle)))
+#                     mistake = pickle.load(filehandle)
+#
+#                 sensor[0].append(p*20)
+#                 means_time[0].append(np.mean(time))
+#                 std_time[0].append(np.std(time))
+#                 mins_time[0].append(np.min(time))
+#                 maxes_time[0].append(np.max(time))
+#
+#             ax_time[0].errorbar(sensor[0], means_time[0], std_time[0], fmt='.{0}'.format(a[index]),
+#                                  ecolor='{0}'.format(a[index]), lw=10,
+#                                  label=r'$n={0}$'.format(n), alpha=0.3)
+#
+#             ax_time[0].errorbar(sensor[0], means_time[0], [np.array(means_time[0]) - np.array(mins_time[0]),
+#                                                              np.array(maxes_time[0]) - np.array(means_time[0])],
+#                                  fmt='.k', markersize=5, ecolor='{0}'.format(a[index]), lw=1, capsize=5, capthick=1)
+#             ax_time[0].plot(sensor[0], means_time[0], '-{0}'.format(a[index]), markersize=1)
+#
+#             ax_time[0].set_xticks(np.array([0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200]))
+#             ax_time[0].set_xlabel(r'${p}$')
+#             # ax_time[0].ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
+#             ax_time[0].set_yticks(np.array([0, 10, 20, 30, 40]))
+#             ax_time[0].set_ylabel(r'Time(sec)')
+#
+#             # plt.subplots_adjust(bottom=0.15, top=0.85)
+#
+#         ax_time[0].legend(ncol=1, loc='upper center', bbox_to_anchor=(0.15, 1))
+#
+#         for index, p in enumerate([50, 100, 200]):
+#             sensor = [[], []]
+#             means_time = [[], []]
+#             std_time = [[], []]
+#             mins_time = [[], []]
+#             maxes_time = [[], []]
+#             for n in range(1, 11):
+#                 with open('result/pcomplexity_{0}_{1}_{2}_{3}_{4}.mat'.format('noiseless', 'random', p, n*20, 3), 'rb') as filehandle:
+#                     time = pickle.load(filehandle)
+#                     error = pickle.load(filehandle)
+#                     itera = (np.array(pickle.load(filehandle)))
+#                     mistake = pickle.load(filehandle)
+#
+#                 sensor[0].append(n*20)
+#                 means_time[0].append(np.mean(time))
+#                 std_time[0].append(np.std(time))
+#                 mins_time[0].append(np.min(time))
+#                 maxes_time[0].append(np.max(time))
+#
+#             ax_time[1].errorbar(sensor[0], means_time[0], std_time[0], fmt='.{0}'.format(a[index]),
+#                                  ecolor='{0}'.format(a[index]), lw=10,
+#                                  label=r'$p={0}$'.format(p), alpha=0.3)
+#
+#             ax_time[1].errorbar(sensor[0], means_time[0], [np.array(means_time[0]) - np.array(mins_time[0]),
+#                                                              np.array(maxes_time[0]) - np.array(means_time[0])],
+#                                  fmt='.k', markersize=5, ecolor='{0}'.format(a[index]), lw=1, capsize=5, capthick=1)
+#             ax_time[1].plot(sensor[0], means_time[0], '-{0}'.format(a[index]), markersize=1)
+#
+#             ax_time[1].set_xticks(np.array([0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200]))
+#             ax_time[1].set_xlabel(r'${n}$')
+#             # ax_time[1].ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
+#             ax_time[1].set_yticks(np.array([0, 10, 20, 30, 40]))
+#
+#             ax_time[1].set_ylabel(r'Time(sec)')
+#         ax_time[1].legend(ncol=1, loc='upper center', bbox_to_anchor=(0.15, 1))
+#         plt.subplots_adjust(top=0.92, hspace=0.37)
+#         plt.savefig('/Users/chrislaw/Box Sync/Research/SSE_Automatica2019/figure/complexity_test_time.pdf', bbox_inches='tight', dpi=600)
+#
+# plt.show()

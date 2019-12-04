@@ -16,6 +16,7 @@ class SecureStateEsitmation:
     def __init__(self, n, p, trial, r, scheme, selection, noise):
         # performance of tolorance, with larger tol, it is susceptible to errors,
         # treating attacked as attacked-free and attacked-free as attacked.
+        self.itera = 0
         with open('smalldata/{7}small_{6}_sse_test_from_mat_n{0}_p{1}_{2}_{3}_{4}_{5}.mat'.format(n, p, trial, r, scheme, selection, noise, def_s), 'rb') as filehandle:
             self.Y = pickle.load(filehandle)
             self.obsMatrix = pickle.load(filehandle)
@@ -105,9 +106,9 @@ def main(n, p, trial, r, scheme, selection, noise):
     # Initializing explored set
     exploredSet = set()  # set
     # iteration
-    itera = 0
+    # itera = 0
     while True:
-        itera = itera + 1
+        sse.itera += 1
         # EMPTY?(frontier) and EMPTY?(discard), then return failure
         if frontier.empty() and discard.empty():
             break
@@ -149,12 +150,11 @@ def main(n, p, trial, r, scheme, selection, noise):
             # print("true attack ({0})        : ".format(len(sse.K)), sorted([i+1 for i in sse.K]))
             # print("estimate attack ({0})    : ".format(len(attack)), attack)
             # --------------------------------------------------
-            return np.linalg.norm(x - sse.x0)/np.linalg.norm(sse.x0), time, itera
+            return np.linalg.norm(x - sse.x0)/np.linalg.norm(sse.x0), time, sse.itera
 
         exploredSet.add(node)
 
         for attack in [0, 1]:
-
             # child CHILD-NODE(problem,node,action)
             childNode = Node()
             sse.genChild(node, childNode, attack)
@@ -235,7 +235,7 @@ if __name__ == "__main__":
 
     result = np.array([]).reshape(0, 5)
     for noise in ['noiseless', 'noisy']:
-        for selection in ['worst', 'random']:
+        for selection in ['random', 'worst']:
             for def_s in [2, 3, 4]:
                 time = []
                 error = []
@@ -256,5 +256,5 @@ if __name__ == "__main__":
                 print('{7}, {0}, {1}, {2}, {3}, {4}, {5}, {6}'.format(noise, selection, np.mean(itera), np.std(itera), np.min(itera), np.max(itera), np.mean(error), def_s))
                 result = np.concatenate((result, np.reshape(np.array([np.mean(itera), np.std(itera), np.min(itera), np.max(itera), np.mean(error)]), (1, 5))), axis=0)
     print(result)
-    with open('result_small', 'wb+') as filehandle:
+    with open('result_small_iter', 'wb+') as filehandle:
         pickle.dump(result, filehandle)
