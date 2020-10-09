@@ -3,7 +3,7 @@ __author__ = chrislaw
 __project__ = SecureStateEstimation
 __date__ = 9/18/18
 """
-""" generate data for future use
+""" generate data for test case I to test the complexity: complexity and optimality
 """
 
 from scipy.sparse import random

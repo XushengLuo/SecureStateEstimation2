@@ -3,6 +3,9 @@ __author__ = chrislaw
 __project__ = SecureStateEstimation
 __date__ = 9/26/18
 """
+"""
+test small systems for test case I: complexity and optimality
+"""
 import queue
 import datetime
 import numpy as np
@@ -38,10 +41,15 @@ class SecureStateEsitmation:
 
     def residual(self, indexOfZero):
         index = [x + y for x, y in product([-1 * i * self.tau for i in indexOfZero], range(self.tau))]
+
         Y = self.Y[index, :]
         O = self.obsMatrix[index, :]
         x, res, _, _ = la.lstsq(O, Y)
         res = np.linalg.norm(Y - O.dot(x))
+        attackfree = [-1 * i + 1 for i in indexOfZero]
+        attack = [i - 1 for i in range(1, self.p + 1) if i not in attackfree]
+        print(attack)
+        print(res, Y.shape, O.shape, x.shape, np.linalg.matrix_rank(O))
         if res <= self.tol + np.linalg.norm(self.noise_bound[np.array(indexOfZero) * -1, :]):
             return True
         else:  # no intersection point
@@ -137,8 +145,8 @@ def main(n, p, trial, r, scheme, selection, noise):
             attack = [i-1 for i in range(1, sse.p + 1) if i not in attackfree]
 
             # sse_from_mat i otherwise i+1
-            # print("true attack ({0})        : ".format(len(sse.K)), sorted([i for i in sse.K]))
-            # print("estimate attack ({0})    : ".format(len(attack)), attack)
+            print("true attack ({0})        : ".format(len(sse.K)), sorted([i for i in sse.K]), sse.itera)
+            print("estimate attack ({0})    : ".format(len(attack)), attack)
             time = (datetime.datetime.now() - start).total_seconds()
             # wrong attack detection
             if attack != sorted([i for i in sse.K]):
@@ -235,8 +243,8 @@ if __name__ == "__main__":
 
     result = np.array([]).reshape(0, 5)
     for noise in ['noiseless', 'noisy']:
-        for selection in ['random', 'worst']:
-            for def_s in [2, 3, 4]:
+        for selection in ['worst', 'random']:
+            for def_s in [3, 2]:
                 time = []
                 error = []
                 itera = []
@@ -256,5 +264,5 @@ if __name__ == "__main__":
                 print('{7}, {0}, {1}, {2}, {3}, {4}, {5}, {6}'.format(noise, selection, np.mean(itera), np.std(itera), np.min(itera), np.max(itera), np.mean(error), def_s))
                 result = np.concatenate((result, np.reshape(np.array([np.mean(itera), np.std(itera), np.min(itera), np.max(itera), np.mean(error)]), (1, 5))), axis=0)
     print(result)
-    with open('result_small_iter', 'wb+') as filehandle:
-        pickle.dump(result, filehandle)
+    # with open('result_small_iter', 'wb+') as filehandle:
+    #     pickle.dump(result, filehandle)

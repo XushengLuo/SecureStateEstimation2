@@ -3,6 +3,9 @@ __author__ = chrislaw
 __project__ = SecureStateEstimation
 __date__ = 9/26/18
 """
+"""
+ test complexity for test case I: complexity and optimality
+"""
 import queue
 import datetime
 import numpy as np

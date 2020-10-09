@@ -4,7 +4,8 @@ import numpy as np
 
 def complexity(p, max_s):
     S = p - 2 * max_s
-    s = int(p * 0.1) # max_s
+    # s = int(p * 0.1)
+    s = max_s
     it = 0
     for i in range(1, S+1):
         if s >= i:
@@ -14,7 +15,7 @@ def complexity(p, max_s):
     return it
 
 
-print(complexity(200, 96))
+print(complexity(10, 2))
 #     s = int(p * 0.1)
 # 200 1 39801
 # 200 2 3861794

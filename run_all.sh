@@ -44,7 +44,7 @@ do
     #     do
     #         for percent in 3
     #         do
-    #             /Applications/MATLAB_R2017b.app/bin/matlab -nodesktop -nosplash -r "cd('/Users/chrislaw/Box Sync/Research/SSE_Automatica2019/Imhotep-smt-master/ImhotepSMT/Examples/Random examples'); scalability_test_from_python(${p},${noise},${selection},${percent});exit"
+#                 /Applications/MATLAB_R2017b.app/bin/matlab -nodesktop -nosplash -r "cd('/Users/chrislaw/Box Sync/Research/SSE_Automatica2019/Imhotep-smt-master/ImhotepSMT/Examples/Random examples'); scalability_test_from_python(${p},${noise},${selection},${percent});exit"
     #         done
     #     done
     # done

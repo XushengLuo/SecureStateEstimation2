@@ -3,7 +3,7 @@ __author__ = chrislaw
 __project__ = SecureStateEstimation
 __date__ = 9/18/18
 """
-""" generate data for future use
+""" generate data for test case II and III
 """
 
 from scipy.sparse import random
@@ -71,7 +71,7 @@ class TestCase(object):
             self.s = int(self.p * percent / 10)  # np.random.randint(0, self.max_s, 1)[0]
 
             # Choose a random attacking set K of size qs
-            self.per = sorted(range(0, self.p))
+            self.per = sorted(range(0, self.p), reverse=True)
             self.K = self.per[0:self.s]
 
             for r in range(1, 6):
@@ -163,8 +163,8 @@ class TestCase(object):
                            'A': self.A, 'C': self.C, 'noiseBound': self.noise_bound, 's': self.s})
 
 
-p = int(sys.argv[1])
-for noise in ['noisy', 'noiseless']:
+p = 200  # int(sys.argv[1])
+for noise in ['noiseless', 'noisy']:
     for system in range(1, 6):
         print(p, noise, system)
         test_case = TestCase(p, p, system, noise)

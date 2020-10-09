@@ -45,15 +45,9 @@ class SecureStateEsitmation:
         x, res, _, _ = la.lstsq(O, Y)
         res = np.linalg.norm(Y - O.dot(x))
         # attackfree = [-1 * i + 1 for i in indexOfZero]
-
-        # attackfree = [-1 * i + 1 for i in indexOfZero]
         # attack = [i - 1 for i in range(1, self.p + 1) if i not in attackfree]
         # print(attack)
-        # if attack == [6, 12, 20, 32, 39, 42, 67, 70, 72, 73, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117,
-        #               118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137,
-        #               138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159]:
-
-            # print(res, self.tol + np.linalg.norm(self.noise_bound[np.array(indexOfZero) * -1, :]))
+        # print(res, Y.shape, O.shape, x.shape, np.linalg.matrix_rank(O))
         if res <= self.tol + np.linalg.norm(self.noise_bound[np.array(indexOfZero) * -1, :]):
             return True
         else:  # no intersection point
@@ -233,19 +227,19 @@ if __name__ == "__main__":
     # for noise in ['noisy', 'noiseless']:
     #     for selection in ['random', 'worst']:
     noise_ = ['noiseless', 'noiseless']
-    selection_ = ['random', 'worst']
-    p = int(sys.argv[1])
-    noise = noise_[int(sys.argv[2])]
-    selection = selection_[int(sys.argv[3])]
-    percent = int(sys.argv[4])
+    selection_ = ['worst', 'random']
+    # p = int(sys.argv[1])
+    # noise = noise_[int(sys.argv[2])]
+    # selection = selection_[int(sys.argv[3])]
+    # percent = int(sys.argv[4])
+    p = 200
+    noise = 'noiseless'
+    selection = 'worst'
+    percent = 1
     time = []
     error = []
     itera = []
     mistake = []
-    # noise = 'noisy'
-    # selection = 'random'
-    # p = 200
-    # percent = 1
     for system in range(1, 6):
         for r in range(1, 6):
             start = datetime.datetime.now()
@@ -263,11 +257,12 @@ if __name__ == "__main__":
             itera.append(i)
             print('SSE:', noise, selection, p, percent, e, t, i, system, r)
 
-    with open('result/{0}_{1}_{2}_{3}.mat'.format(noise, selection, p, percent), 'wb+') as filehandle:
-        pickle.dump(time, filehandle)
-        pickle.dump(error, filehandle)
-        pickle.dump(itera, filehandle)
-        pickle.dump(mistake, filehandle)
+    # with open('result/{0}_{1}_{2}_{3}.mat'.format(noise, selection, p, percent), 'wb+') as filehandle:
+    #     pickle.dump(time, filehandle)
+    #     pickle.dump(error, filehandle)
+    #     pickle.dump(itera, filehandle)
+    #     pickle.dump(mistake, filehandle)
+
     # ----------------- date from matlab ---------------
     # from data_from_mat import TestCase
     # testCase = TestCase()
